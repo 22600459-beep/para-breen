@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para Brendita</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #ffe6e9 0%, #ffccd5 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-y: auto; /* Permite desplazamiento vertical si la tarjeta es muy alta */
+            padding: 20px 0;
+            position: relative;
+        }
+
+        /* Tarjeta Principal */
+        .card {
+            background-color: #ffffff;
+            padding: 40px 35px;
+            border-radius: 30px;
+            box-shadow: 0 20px 40px rgba(255, 77, 109, 0.25);
+            text-align: center;
+            max-width: 500px;
+            width: 92%;
+            border: 3px solid #ffb3c1;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Corazón Palpitante */
+        .corazon {
+            font-size: 4.5rem;
+            color: #ff4d6d;
+            display: inline-block;
+            animation: latido 1.2s infinite ease-in-out;
+            filter: drop-shadow(0 0 12px rgba(255, 77, 109, 0.4));
+        }
+
+        @keyframes latido {
+            0% { transform: scale(1); }
+            14% { transform: scale(1.25); }
+            28% { transform: scale(1); }
+            42% { transform: scale(1.15); }
+            70% { transform: scale(1); }
+        }
+
+        /* Contenedor de Texto */
+        .mensaje-contenedor {
+            min-height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 15px;
+        }
+
+        .mensaje {
+            color: #c9184a;
+            font-size: 2.1rem;
+            font-weight: bold;
+            border-right: 3px solid #ff4d6d;
+            white-space: nowrap;
+            overflow: hidden;
+            display: inline-block;
+            animation: parpadeoCursor 0.75s step-end infinite;
+        }
+
+        @keyframes parpadeoCursor {
+            from, to { border-color: transparent; }
+            50% { border-color: #ff4d6d; }
+        }
+
+        /* Contenedor de Foto (Oculto completamente al inicio) */
+        .foto-contenedor {
+            width: 100%;
+            max-height: 0;
+            opacity: 0;
+            margin: 0 auto;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 0px solid #ff758f;
+            transition: all 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* --- LÍNEAS MODIFICADAS PARA LA FOTO DE 488 x 893 --- */
+        .foto-contenedor.revelar {
+            max-height: 550px; /* Se aumentó la altura máxima para adaptarse al formato vertical */
+            opacity: 1;
+            margin-top: 25px;
+            border: 3px solid #ff758f;
+            box-shadow: 0 10px 22px rgba(255, 117, 143, 0.35);
+        }
+
+        .foto-contenedor img {
+            width: 100%;
+            height: 100%;
+            max-height: 520px;
+            object-fit: contain; /* Asegura que la foto completa se muestre sin recortar los bordes */
+            display: block;
+            border-radius: 17px;
+            background-color: #fff0f3; /* Fondo suave para que luzca bien */
+        }
+        /* --------------------------------------------------- */
+
+        /* Botón Interactivo */
+        .btn-abrir {
+            margin-top: 20px;
+            padding: 14px 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #ffffff;
+            background-color: #ff4d6d;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 6px 18px rgba(255, 77, 109, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .btn-abrir:hover {
+            background-color: #c9184a;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 22px rgba(201, 24, 74, 0.4);
+        }
+
+        /* Lluvia de Corazones Flotantes */
+        .corazon-flotante {
+            position: absolute;
+            color: #ff758f;
+            animation: flotar 3.5s linear forwards;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        @keyframes flotar {
+            0% {
+                transform: translateY(0) scale(0.8) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) scale(1.3) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Frases gigantes de fondo */
+        .texto-gigante {
+            position: absolute;
+            font-size: clamp(2rem, 5vw, 4.2rem);
+            font-weight: 900;
+            color: #ff4d6d;
+            opacity: 0;
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 1;
+            text-shadow: 0 5px 15px rgba(255, 77, 109, 0.2);
+            animation: aparecerFlotar 4s ease-out forwards;
+        }
+
+        @keyframes aparecerFlotar {
+            0% {
+                opacity: 0;
+                transform: scale(0.3) translateY(20px);
+            }
+            20% {
+                opacity: 0.3;
+                transform: scale(1) translateY(0);
+            }
+            80% {
+                opacity: 0.3;
+            }
+            100% {
+                opacity: 0;
+                transform: scale(1.1) translateY(-30px);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <div class="corazon">❤</div>
+
+        <div class="mensaje-contenedor">
+            <span class="mensaje" id="texto"></span>
+        </div>
+
+        <!-- FOTO OCULTA HASTA EL FINAL -->
+        <div class="foto-contenedor" id="contenedorFoto">
+            <!-- CAMBIA 'tu_foto.jpg' POR EL NOMBRE O LINK DE TU FOTO -->
+            <img src="img1.JPEG" alt="Nuestra Foto">
+        </div>
+        
+        <button class="btn-abrir" id="btnIniciar" onclick="escribirMensaje()">Haz clic aquí</button>
+    </div>
+
+    <script>
+        const textoEscribir = "Brendita te quiero mucho";
+        let i = 0;
+        let escribiendo = false;
+
+        function escribirMensaje() {
+            if (escribiendo) return;
+            escribiendo = true;
+            
+            document.getElementById("btnIniciar").style.display = "none";
+            
+            const elementoTexto = document.getElementById("texto");
+            elementoTexto.innerHTML = "";
+            i = 0;
+
+            function tipo() {
+                if (i < textoEscribir.length) {
+                    elementoTexto.innerHTML += textoEscribir.charAt(i);
+                    i++;
+                    setTimeout(tipo, 100);
+                } else {
+                    // FINAL: Revelar la imagen + lluvia de corazones + frases al mismo tiempo
+                    document.getElementById("contenedorFoto").classList.add("revelar");
+                    lanzarCorazones();
+                    generarMensajesGigantes();
+                }
+            }
+            tipo();
+        }
+
+        function lanzarCorazones() {
+            for (let j = 0; j < 35; j++) {
+                setTimeout(() => {
+                    const corazonFlotante = document.createElement("div");
+                    corazonFlotante.classList.add("corazon-flotante");
+                    corazonFlotante.innerHTML = "❤";
+                    corazonFlotante.style.left = Math.random() * 100 + "vw";
+                    corazonFlotante.style.top = "100vh";
+                    corazonFlotante.style.fontSize = (Math.random() * 25 + 15) + "px";
+                    document.body.appendChild(corazonFlotante);
+
+                    setTimeout(() => {
+                        corazonFlotante.remove();
+                    }, 3500);
+                }, j * 120);
+            }
+        }
+
+        function generarMensajesGigantes() {
+            const totalMensajes = 16;
+
+            for (let j = 0; j < totalMensajes; j++) {
+                setTimeout(() => {
+                    const textoFlotante = document.createElement("div");
+                    textoFlotante.classList.add("texto-gigante");
+                    textoFlotante.innerText = "¡Brendita te quiero mucho!";
+                    
+                    const posX = Math.random() * 75 + 5;
+                    const posY = Math.random() * 75 + 10;
+                    
+                    textoFlotante.style.left = posX + "vw";
+                    textoFlotante.style.top = posY + "vh";
+                    
+                    const angulo = (Math.random() * 20) - 10;
+                    textoFlotante.style.transform = `rotate(${angulo}deg)`;
+
+                    document.body.appendChild(textoFlotante);
+
+                    setTimeout(() => {
+                        textoFlotante.remove();
+                    }, 4000);
+                }, j * 250);
+            }
+        }
+    </script>
+
+</body>
+</html>
+
+
+
+ 
+
+
+ 
+
